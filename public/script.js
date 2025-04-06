@@ -3,7 +3,8 @@ const form = document.getElementById('form');
 const input = document.getElementById('input');
 const messages = document.getElementById('messages');
 
-form .addEventListener('submit',(e)=>{
+// Submit new message
+form.addEventListener('submit',(e) => {
     e.preventDefault();
     if (input.value) {
         socket.emit('chat message', input.value);
@@ -11,9 +12,21 @@ form .addEventListener('submit',(e)=>{
     }
 });
 
+// Append live messages
 socket.on('chat message', (msg) => {
     const li = document.createElement('li');
     li.textContent = msg;
     messages.appendChild(li);
     window.scrollTo(0, document.body.scrollHeight);
+});
+
+
+// Load chat history
+socket.on('chat history', (history) => {
+    history.forEach((msg) => {
+        const li = document.createElement('li');
+        li.textContent=msg.text;
+        messages.appendChild(li);
+    });
+    window.scrollTo(0,document.body.scrollHeight);
 });

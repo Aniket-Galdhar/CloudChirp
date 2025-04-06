@@ -15,8 +15,16 @@ const io = socketio(server);
 app.use(express.static(path.join(__dirname,'public')));
 
 // socket.io setup
-io.on('connection',(socket) => {
+io.on('connection', async(socket) => {
     console.log('User connected:', socket.id);
+    
+    // show recent chat histroy
+    try{
+        const messages = await Message.find().sort({ timestamp: 1 }).limit(50);
+        socket.emit('chat history', messages);
+    } catch(err){
+        console.error('Error fetching messages: ', err);
+    }
 
     // chat message socket handler
     socket.on('chat message', async (msg) => {
