@@ -9,6 +9,10 @@ const MessageSchema = new mongoose.Schema({
         type:String,
         required: true
     },
+    username: {
+        type: String,
+        default: 'Anonymous'
+    },
     timestamp: {
         type:Date,
         default: Date.now
