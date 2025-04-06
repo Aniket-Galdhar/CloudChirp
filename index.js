@@ -5,6 +5,7 @@ const http = require('http');
 const socketio = require('socket.io');
 const mongoose = require('mongoose');
 const path = require('path');
+const Message = require('./models/message');
 
 dotenv.config();
 const server = http.createServer(app);
@@ -17,9 +18,21 @@ app.use(express.static(path.join(__dirname,'public')));
 io.on('connection',(socket) => {
     console.log('User connected:', socket.id);
 
-    socket.on('chat message', (msg) => {
+    // chat message socket handler
+    socket.on('chat message', async (msg) => {
         console.log('Message:', msg);
-        io.emit('chat message', msg);
+
+        const newMessage = new Message({
+            text: msg,
+            senderId: socket.id
+        });
+
+        try{
+            await newMessage.save();
+            io.emit('chat message', msg);
+        } catch(err){
+            console.error('Error saving message:', err);
+        }
     });
 
     socket.on('disconnect', () => {
