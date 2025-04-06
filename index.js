@@ -33,14 +33,16 @@ io.on('connection', async(socket) => {
         const newMessage = new Message({
             text: msg.text,
             senderId: socket.id,
-            username: msg.username || 'Anonymous'
+            username: msg.username || 'Anonymous',
+            timestamp: Date.now()
         });
 
         try{
             await newMessage.save();
             io.emit('chat message', {
                 text:msg.text,
-                username: msg.username || 'Anonymous'
+                username: msg.username || 'Anonymous',
+                timestamp: msg.timestamp
             });
         } catch(err){
             console.error('Error saving message:', err);

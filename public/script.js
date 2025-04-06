@@ -16,7 +16,8 @@ form.addEventListener('submit',(e) => {
     if (input.value) {
         socket.emit('chat message', {
             text: input.value,
-            username:nickname
+            username:nickname,
+            timestamp: Date.now()
         });
         input.value='';
     }
@@ -25,7 +26,8 @@ form.addEventListener('submit',(e) => {
 // Append live messages
 socket.on('chat message', (msg) => {
     const li = document.createElement('li');
-    li.textContent = `${msg.username}: ${msg.text}`;
+    const time = new Date(msg.timestamp).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    li.textContent = `[${time}] ${msg.username}: ${msg.text}`;
     messages.appendChild(li);
     window.scrollTo(0, document.body.scrollHeight);
 });
@@ -35,7 +37,8 @@ socket.on('chat message', (msg) => {
 socket.on('chat history', (history) => {
     history.forEach((msg) => {
         const li = document.createElement('li');
-        li.textContent=`${msg.username || 'Anonymous'}: ${msg.text}`;
+        const time = new Date(msg.timestamp).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+        li.textContent = `[${time}] ${msg.username}: ${msg.text}`;
         messages.appendChild(li);
     });
     window.scrollTo(0,document.body.scrollHeight);
