@@ -1,4 +1,5 @@
 const express = require('express');
+const app = express();
 const dotenv = require('dotenv');
 const http = require('http');
 const socketio = require('socket.io');
@@ -6,8 +7,6 @@ const mongoose = require('mongoose');
 const path = require('path');
 
 dotenv.config();
-
-const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
@@ -33,7 +32,7 @@ io.on('connection',(socket) => {
 mongoose.connect(process.env.MONGO_URI, { 
     useNewUrlParser: true, useUnifiedTopology: true 
 }).then(() => {
-    console.log('MongoDB connected');
+    console.log('MonogDB connected');
 }).catch((err) => {
     console.error('MongoDB connection error',err);
 });
