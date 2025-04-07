@@ -29,7 +29,6 @@ io.on('connection', async(socket) => {
     // chat message socket handler
     socket.on('chat message', async (msg) => {
         console.log('Message:', msg);
-
         const newMessage = new Message({
             text: msg.text,
             senderId: socket.id,
